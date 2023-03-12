@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Express } from 'express';
 import dotenv from 'dotenv';
 //Import Data source class
 import { DataSource } from 'typeorm';
@@ -7,6 +7,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 //Import entity
 import { Task } from './src/tasks/tasks.entity';
+import { taskRouter } from './src/tasks/task.router';
 
 const app: Express = express();
 dotenv.config();
@@ -30,10 +31,6 @@ export const AppDataSource = new DataSource({
 //Port
 const PORT = process.env.PORT;
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Express server with typescript');
-});
-
 //Initialize db connection
 AppDataSource.initialize()
   .then(() => {
@@ -43,3 +40,5 @@ AppDataSource.initialize()
   .catch((err) => {
     console.error('Error during Data source initialization', err);
   });
+
+app.use('/tasks', taskRouter);
