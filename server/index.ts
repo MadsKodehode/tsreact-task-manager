@@ -7,7 +7,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 //Import entity
 import { Task } from './src/tasks/tasks.entity';
-import { taskRouter } from './src/tasks/task.router';
+import { taskRouter } from './src/tasks/tasks.router';
 
 const app: Express = express();
 dotenv.config();
