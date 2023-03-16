@@ -10,6 +10,7 @@ import { renderPriorityBordercolor } from './helpers/renderPriorityBordercolor';
 import PropTypes from 'prop-types';
 export const Task: FC<ITask> = (props): ReactElement => {
   const {
+    id,
     title = 'Default Title',
     date = new Date(),
     description = 'Lorem ipsum dolor si amet',
@@ -36,7 +37,12 @@ export const Task: FC<ITask> = (props): ReactElement => {
     >
       <TaskHeader title={title} date={date} />
       <TaskDesc description={description} />
-      <TaskFooter onClick={onClick} onStatusChange={onStatusChange} />
+      <TaskFooter
+        id={id}
+        status={status}
+        onClick={onClick}
+        onStatusChange={onStatusChange}
+      />
     </Box>
   );
 };
