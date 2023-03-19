@@ -1,5 +1,6 @@
 import { TaskCounterStatusType } from '../interfaces/ITaskCounter';
 import { Status } from '../../createTaskForm/enums/Status';
+//Change label based on status
 export const emitCorrectLabel = (status: TaskCounterStatusType): string => {
   switch (status) {
     case Status.todo:

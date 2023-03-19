@@ -1,5 +1,6 @@
 import { TaskCounterStatusType } from '../interfaces/ITaskCounter';
 import { Status } from '../../createTaskForm/enums/Status';
+//Change border color based on status
 export const emitCorrectBorderColor = (
   status: TaskCounterStatusType,
 ): string => {

@@ -1,11 +1,13 @@
 import React, { FC, ReactElement } from 'react';
+
 import { Avatar, Box, Typography } from '@mui/material';
+
 import PropTypes from 'prop-types';
 
-//Type safety for props
 interface IProfile {
   name: string;
 }
+
 export const Profile: FC<IProfile> = (props): ReactElement => {
   const { name = 'John' } = props;
 
