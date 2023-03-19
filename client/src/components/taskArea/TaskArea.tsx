@@ -1,11 +1,29 @@
 import React, { FC, ReactElement } from 'react';
+
+//Mui components
 import { Grid, Box, Alert, LinearProgress } from '@mui/material';
+
+//Date formatter
 import { format } from 'date-fns';
+
+//Components
 import { TaskCounter } from '../taskCounter/TaskCounter';
 import { Task } from '../task/Task';
-import { useQuery } from '@tanstack/react-query';
+
+//React query
+import { useQuery, useMutation } from '@tanstack/react-query';
+
+//Helpers
 import { sendApiRequest } from '../../helpers/sendApiRequests';
+import { countTasks } from './helpers/countTasks';
+
+//Interfaces
 import { ITaskApi } from './interfaces/ITaskApi';
+import { IUpdateTask } from '../createTaskForm/interfaces/IUpdateTask';
+
+//Enums
+import { Status } from '../createTaskForm/enums/Status';
+
 export const TaskArea: FC = (): ReactElement => {
   const { error, isLoading, data, refetch } = useQuery(['tasks'], async () => {
     return await sendApiRequest<ITaskApi[]>(
@@ -14,6 +32,33 @@ export const TaskArea: FC = (): ReactElement => {
     );
   });
 
+  //Update task
+  const updateTaskMutation = useMutation((data: IUpdateTask) =>
+    sendApiRequest('http://localhost:3200/tasks', 'PUT', data),
+  );
+
+  //Handler function for change event
+  function onStatusChangeHandler(
+    e: React.ChangeEvent<HTMLInputElement>,
+    id: string,
+  ) {
+    updateTaskMutation.mutate({
+      id,
+      status: e.target.checked ? Status.inProgress : Status.todo,
+    });
+  }
+  //Handler function for mark complete
+  function markCompleteHandler(
+    e:
+      | React.MouseEvent<HTMLButtonElement>
+      | React.MouseEvent<HTMLAnchorElement>,
+    id: string,
+  ) {
+    updateTaskMutation.mutate({
+      id,
+      status: Status.completed,
+    });
+  }
   return (
     <Grid item md={8} px={4}>
       <Box mb={8} px={4}>
@@ -29,9 +74,18 @@ export const TaskArea: FC = (): ReactElement => {
           xs={12}
           mb={8}
         >
-          <TaskCounter />
-          <TaskCounter />
-          <TaskCounter />
+          <TaskCounter
+            count={data ? countTasks(data, Status.todo) : undefined}
+            status={Status.todo}
+          />
+          <TaskCounter
+            count={data ? countTasks(data, Status.inProgress) : undefined}
+            status={Status.inProgress}
+          />
+          <TaskCounter
+            count={data ? countTasks(data, Status.completed) : undefined}
+            status={Status.completed}
+          />
         </Grid>
         <Grid item display="flex" flexDirection="column" xs={10} md={8}>
           <>
@@ -46,7 +100,8 @@ export const TaskArea: FC = (): ReactElement => {
             Array.isArray(data) &&
             data.length > 0 &&
             data.map((each, index) => {
-              return (
+              return each.status === Status.todo ||
+                each.status === Status.inProgress ? (
                 <Task
                   key={index + each.priority}
                   id={each.id}
@@ -55,7 +110,11 @@ export const TaskArea: FC = (): ReactElement => {
                   date={new Date(each.date)}
                   priority={each.priority}
                   status={each.status}
+                  onStatusChange={onStatusChangeHandler}
+                  onClick={markCompleteHandler}
                 />
+              ) : (
+                false
               );
             })
           )}

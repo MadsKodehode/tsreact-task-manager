@@ -1,5 +1,9 @@
 import React, { FC, ReactElement } from 'react';
+
+//Mui components
 import { Grid } from '@mui/material';
+
+//Components
 import { Profile } from '../profile/Profile';
 import { CreateTaskForm } from '../createTaskForm/CreateTaskForm';
 

@@ -1,9 +1,14 @@
 import React, { FC, ReactElement } from 'react';
+//Mui components
 import { Box, Typography, Avatar } from '@mui/material';
+//Interfaces
 import { ITaskCounter } from './interfaces/ITaskCounter';
+//Enums
 import { Status } from '../createTaskForm/enums/Status';
+//Helper functions
 import { emitCorrectBorderColor } from './helpers/emitCorrectBorderColor';
 import { emitCorrectLabel } from './helpers/emitCorrectLabel';
+
 import PropTypes from 'prop-types';
 export const TaskCounter: FC<ITaskCounter> = (props): ReactElement => {
   const { status = Status.completed, count = 0 } = props;

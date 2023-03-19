@@ -1,5 +1,6 @@
 import React, { FC, ReactElement, useState, useEffect } from 'react';
-//Material ui components
+
+//Mui components
 import {
   Box,
   Typography,
@@ -9,17 +10,26 @@ import {
   Alert,
   AlertTitle,
 } from '@mui/material';
-//React hooks
+
+//React query
 import { useMutation } from '@tanstack/react-query';
+
 //Form components
 import { TaskTitleField } from './_TaskTitleField';
 import { TaskDescField } from './_TaskDescField';
 import { TaskDateField } from './_TaskDateField';
 import { TaskSelectField } from './_TaskSelectField';
+
+//Enums
 import { Status } from './enums/Status';
 import { Priority } from './enums/Priority';
+
+//Interfaces
 import { ICreateTask } from '../taskArea/interfaces/ICreateTask';
+
+//Helper functions
 import { sendApiRequest } from '../../helpers/sendApiRequests';
+
 export const CreateTaskForm: FC = (): ReactElement => {
   const [title, setTitle] = useState<string | undefined>(undefined);
   const [description, setDescription] = useState<string | undefined>(undefined);
@@ -28,17 +38,18 @@ export const CreateTaskForm: FC = (): ReactElement => {
   const [priority, setPriority] = useState<string>(Priority.normal);
   const [showSuccess, setShowSuccess] = useState<boolean>(false);
 
-  //Returns result of api request when mutate is called
+  //Init mutation function
   const createTaskMutation = useMutation((data: ICreateTask) =>
     sendApiRequest('http://localhost:3200/tasks', 'POST', data),
   );
 
   //Function for creating task
   function createTaskHandler() {
+    //If not valid
     if (!title || !date || !description) {
       return;
     }
-
+    //Create task
     const task: ICreateTask = {
       title,
       description,
@@ -46,6 +57,8 @@ export const CreateTaskForm: FC = (): ReactElement => {
       status,
       priority,
     };
+
+    //And save to db
     createTaskMutation.mutate(task);
   }
   //Shows succcess message when task is created
@@ -135,7 +148,7 @@ export const CreateTaskForm: FC = (): ReactElement => {
           size="large"
           fullWidth
         >
-          Create task
+          Create new task
         </Button>
       </Stack>
     </Box>

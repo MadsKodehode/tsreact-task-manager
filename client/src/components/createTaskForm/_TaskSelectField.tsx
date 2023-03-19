@@ -1,4 +1,5 @@
 import React, { FC, ReactElement } from 'react';
+
 //Material ui components
 import {
   FormControl,
@@ -7,8 +8,10 @@ import {
   Select,
   SelectChangeEvent,
 } from '@mui/material';
-//Select field interface
+
+//Interfaces
 import { ISelectField } from './interfaces/ISelectField';
+
 import PropTypes from 'prop-types';
 
 export const TaskSelectField: FC<ISelectField> = (props): ReactElement => {

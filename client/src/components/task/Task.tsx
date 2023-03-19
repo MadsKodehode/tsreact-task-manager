@@ -1,11 +1,19 @@
 import React, { FC, ReactElement } from 'react';
+
+//Mui components
 import { Box } from '@mui/material';
+
+//Components
 import { TaskHeader } from './_TaskHeader';
 import { TaskDesc } from './_TaskDesc';
 import { TaskFooter } from './_TaskFooter';
+
+//Interfaces
 import { ITask } from './interfaces/ITask';
+//Enums
 import { Status } from '../createTaskForm/enums/Status';
 import { Priority } from '../createTaskForm/enums/Priority';
+//Helper functions
 import { renderPriorityBordercolor } from './helpers/renderPriorityBordercolor';
 import PropTypes from 'prop-types';
 export const Task: FC<ITask> = (props): ReactElement => {
