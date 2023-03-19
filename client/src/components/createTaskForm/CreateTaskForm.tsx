@@ -1,4 +1,10 @@
-import React, { FC, ReactElement, useState, useEffect } from 'react';
+import React, {
+  FC,
+  ReactElement,
+  useState,
+  useEffect,
+  useContext,
+} from 'react';
 
 //Mui components
 import {
@@ -30,6 +36,9 @@ import { ICreateTask } from '../taskArea/interfaces/ICreateTask';
 //Helper functions
 import { sendApiRequest } from '../../helpers/sendApiRequests';
 
+//Context
+import { TaskStatusChangeContext } from '../../context';
+
 export const CreateTaskForm: FC = (): ReactElement => {
   const [title, setTitle] = useState<string | undefined>(undefined);
   const [description, setDescription] = useState<string | undefined>(undefined);
@@ -37,6 +46,8 @@ export const CreateTaskForm: FC = (): ReactElement => {
   const [status, setStatus] = useState<string>(Status.todo);
   const [priority, setPriority] = useState<string>(Priority.normal);
   const [showSuccess, setShowSuccess] = useState<boolean>(false);
+
+  const taskUpdatedContext = useContext(TaskStatusChangeContext);
 
   //Init mutation function
   const createTaskMutation = useMutation((data: ICreateTask) =>
@@ -65,6 +76,9 @@ export const CreateTaskForm: FC = (): ReactElement => {
   useEffect(() => {
     if (createTaskMutation.isSuccess) {
       setShowSuccess(true);
+
+      //Toggle context state
+      taskUpdatedContext.toggle();
     }
 
     const successTimeout = setTimeout(() => {

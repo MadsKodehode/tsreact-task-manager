@@ -1,4 +1,4 @@
-import React, { FC, ReactElement } from 'react';
+import React, { FC, ReactElement, useContext, useEffect } from 'react';
 
 //Mui components
 import { Grid, Box, Alert, LinearProgress } from '@mui/material';
@@ -24,7 +24,12 @@ import { IUpdateTask } from '../createTaskForm/interfaces/IUpdateTask';
 //Enums
 import { Status } from '../createTaskForm/enums/Status';
 
+//Context
+import { TaskStatusChangeContext } from '../../context';
+
 export const TaskArea: FC = (): ReactElement => {
+  const taskUpdatedContext = useContext(TaskStatusChangeContext);
+
   const { error, isLoading, data, refetch } = useQuery(['tasks'], async () => {
     return await sendApiRequest<ITaskApi[]>(
       'http://localhost:3200/tasks',
@@ -36,6 +41,16 @@ export const TaskArea: FC = (): ReactElement => {
   const updateTaskMutation = useMutation((data: IUpdateTask) =>
     sendApiRequest('http://localhost:3200/tasks', 'PUT', data),
   );
+  //Refetch when context updates
+  useEffect(() => {
+    refetch();
+  }, [taskUpdatedContext.updated]);
+
+  useEffect(() => {
+    if (updateTaskMutation.isSuccess) {
+      taskUpdatedContext.toggle();
+    }
+  }, [updateTaskMutation.isSuccess]);
 
   //Handler function for change event
   function onStatusChangeHandler(
@@ -47,6 +62,7 @@ export const TaskArea: FC = (): ReactElement => {
       status: e.target.checked ? Status.inProgress : Status.todo,
     });
   }
+
   //Handler function for mark complete
   function markCompleteHandler(
     e:
